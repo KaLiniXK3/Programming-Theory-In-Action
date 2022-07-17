@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class EnemyCube : Enemy
 {
-    //variables
+    //Variables
+    [Header("Enemy Special Variables")]
     [SerializeField] float jumpHeight;
     [SerializeField] LayerMask groundMask;
     Vector3 velocityCube;
+    [SerializeField] float rotateSpeed;
 
     bool canJump = true;
     protected override void MoveType()
     {
+        Quaternion lookOnLook = Quaternion.LookRotation(Target(currentTarget));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookOnLook, Time.fixedDeltaTime * rotateSpeed);
         if (canJump)
         {
             Jump();

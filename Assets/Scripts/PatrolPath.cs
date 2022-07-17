@@ -11,8 +11,8 @@ public class PatrolPath : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             int j = GetNextIndex(i);
-            Gizmos.DrawSphere(GetWayPointPosition(i), wayPointRadius);
-            Gizmos.DrawLine(GetWayPointPosition(i), GetWayPointPosition(j));
+            Gizmos.DrawSphere(GetWayPointPosition(i).position, wayPointRadius);
+            Gizmos.DrawLine(GetWayPointPosition(i).position, GetWayPointPosition(j).position);
         }
     }
 
@@ -25,8 +25,8 @@ public class PatrolPath : MonoBehaviour
         return i + 1;
     }
 
-    public Vector3 GetWayPointPosition(int i)
+    public Transform GetWayPointPosition(int i)
     {
-        return transform.GetChild(i).position;
+        return transform.GetChild(i);
     }
 }

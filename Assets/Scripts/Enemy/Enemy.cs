@@ -5,54 +5,74 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     //references
+    [Header("References")]
     [SerializeField] protected Rigidbody rb;
     [SerializeField] public GameObject player;
     [SerializeField] PatrolPath patrolPath;
 
     //Variables
+    [Header("Attack Variables")]
     //Attack
     [SerializeField] protected int health;
     [SerializeField] protected int minDamage;
     [SerializeField] protected int maxDamage;
     [SerializeField] protected float attackRange;
     [SerializeField] protected float cooldown;
+    bool canAttack;
+
+    [Header("Movement Variables")]
     //Movement
     [SerializeField] protected float speed = 2;
     [SerializeField] protected float observationSphereRadius;
+    [SerializeField] float suspiciousTime;
+    float timeSinceLastSawPlayer;
+    bool isTriggered;
+    protected Transform currentTarget;
+
+    [Header("Patrol Variables")]
     //Patrol
     [SerializeField] float wayPointTolerance = 1f;
-    [SerializeField] int currentWayPointIndex;
-    bool isTriggered;
+    [SerializeField] float wayPointWaitTime;
+    int currentWayPointIndex;
+    float timeSinceArrivedWayPoint;
     float time;
-    bool canAttack;
-
 
     private void Update()
     {
         isTriggered = ObservationZone();
-        Attack();
     }
     private void FixedUpdate()
     {
         if (isTriggered)
         {
-            MoveToTarget(Target(player));
+            MoveToTarget(player.transform);
+            Attack();
+            timeSinceLastSawPlayer = 0;
+        }
+        else if (timeSinceLastSawPlayer < suspiciousTime)
+        {
+            //Wait
         }
         else
         {
             Patrol();
         }
+        timeSinceLastSawPlayer += Time.fixedDeltaTime;
     }
 
     //General Methods
-    protected void MoveToTarget(Vector3 target)
+    protected void MoveToTarget(Transform target)
     {
-        rb.MovePosition(transform.position + target * speed * Time.fixedDeltaTime);
+        rb.MovePosition(transform.position + Target(target) * speed * Time.fixedDeltaTime);
         MoveType();
     }
     protected virtual void MoveType()
     {
 
+    }
+    protected float DistanceBetweenPlayer()
+    {
+        return Vector3.Distance(transform.position, player.transform.position);
     }
     bool ObservationZone()
     {
@@ -62,10 +82,6 @@ public class Enemy : MonoBehaviour
         }
         else return false;
     }
-    private float DistanceBetweenPlayer()
-    {
-        return Vector3.Distance(transform.position, player.transform.position);
-    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -74,7 +90,6 @@ public class Enemy : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, attackRange);
 
     }
-    //
 
     //Attack Methods
     void Attack()
@@ -99,7 +114,6 @@ public class Enemy : MonoBehaviour
     {
         PlayerHealth.health -= Random.Range(minDamage, maxDamage);
     }
-    //
 
     //Patrol Methods
     void Patrol()
@@ -108,12 +122,17 @@ public class Enemy : MonoBehaviour
         {
             if (AtWayPoint())
             {
+                timeSinceArrivedWayPoint = 0;
                 CycleWayPoint();
             }
         }
-        MoveToTarget(Target(GetNextWayPoint()));
+        if (timeSinceArrivedWayPoint > wayPointWaitTime)
+        {
+            MoveToTarget(GetNextWayPoint());
+        }
+        timeSinceArrivedWayPoint += Time.deltaTime;
     }
-    private Vector3 GetNextWayPoint()
+    private Transform GetNextWayPoint()
     {
         return patrolPath.GetWayPointPosition(currentWayPointIndex);
     }
@@ -123,20 +142,21 @@ public class Enemy : MonoBehaviour
     }
     private bool AtWayPoint()
     {
-        float distance = Vector3.Distance(transform.position, GetNextWayPoint());
+        float distance = Vector3.Distance(transform.position, GetNextWayPoint().position);
         return distance < wayPointTolerance;
     }
-    //
 
     //Target overloads
     protected Vector3 Target(GameObject target)
     {
         return Vector3.Normalize(target.transform.position - transform.position);
     }
-    protected Vector3 Target(Vector3 target)
+    protected Vector3 Target(Transform target)
     {
-        return Vector3.Normalize(target - transform.position);
+        Debug.Log(target);
+        currentTarget = target;
+
+        return Vector3.Normalize(target.position - transform.position);
     }
-    //
 }
 
