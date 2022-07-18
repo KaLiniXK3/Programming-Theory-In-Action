@@ -113,6 +113,11 @@ public class Enemy : MonoBehaviour
     protected virtual void DealDamage()
     {
         PlayerHealth.health -= Random.Range(minDamage, maxDamage);
+        if (PlayerHealth.health < 0)
+        {
+            PlayerHealth.health = 0;
+        }
+        PlayerHealth.UpdateHealthText();
     }
 
     //Patrol Methods
@@ -153,7 +158,6 @@ public class Enemy : MonoBehaviour
     }
     protected Vector3 Target(Transform target)
     {
-        Debug.Log(target);
         currentTarget = target;
 
         return Vector3.Normalize(target.position - transform.position);

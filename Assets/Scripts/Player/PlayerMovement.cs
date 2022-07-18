@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform groundCheck;
 
     //Variables
+    [SerializeField] float runSpeed;
+    [SerializeField] float walkSpeed;
     [SerializeField] float speed;
     [SerializeField] float jumpHeight;
     Vector3 playerVelocity;
@@ -20,10 +23,23 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] LayerMask groundMask;
     bool isGrounded;
 
+    //Stamina
+    [SerializeField] float stamina;
+    [SerializeField] float staminaUseMultiplier;
+    [SerializeField] float staminaReloadMultiplier;
+    bool canRun;
 
+    //UI
+    [SerializeField] Slider slider;
+
+    private void Start()
+    {
+        slider.maxValue = 100;
+    }
     private void Update()
     {
         GroundChecker();
+        Run();
         Movement();
         Jump();
         CheckAboveCollision();
@@ -46,14 +62,33 @@ public class PlayerMovement : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
 
         Vector3 move = Vector3.Normalize(transform.right * horizontalInput + transform.forward * verticalInput);
-        characterController.Move(move * speed * Time.fixedDeltaTime);
+        characterController.Move(move * speed * Time.deltaTime);
+    }
+    void Run()
+    {
+        Debug.Log("Speed: " + speed);
+
+        if (Input.GetKey(KeyCode.LeftShift) && canRun)
+        {
+            speed = runSpeed;
+            UseStamina();
+            if (stamina <= 0)
+            {
+                canRun = false;
+            }
+        }
+        else
+        {
+            StartCoroutine(ReloadStamina());
+            speed = walkSpeed;
+        }
     }
     void Jump()
     {
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             characterController.slopeLimit = 100;
-            playerVelocity.y = Mathf.Sqrt(-2 * gravityValue * jumpHeight);
+            playerVelocity.y = Mathf.Sqrt(-2 * gravityValue * jumpHeight * Time.deltaTime);
         }
     }
     void CheckAboveCollision()
@@ -66,8 +101,28 @@ public class PlayerMovement : MonoBehaviour
     }
     void Gravity()
     {
-        playerVelocity.y += gravityValue * Time.fixedDeltaTime;
-        characterController.Move(playerVelocity * Time.fixedDeltaTime);
+        playerVelocity.y += gravityValue * Time.deltaTime;
+        characterController.Move(playerVelocity * Time.deltaTime);
+    }
+    void UseStamina()
+    {
+
+        stamina -= Time.deltaTime * staminaUseMultiplier;
+        slider.value = stamina;
+        //Debug.Log("Stamina: " + stamina);
+    }
+    IEnumerator ReloadStamina()
+    {
+        yield return new WaitForSeconds(1f);
+        if (stamina <= 100)
+        {
+            stamina += Time.deltaTime * staminaReloadMultiplier;
+            slider.value = stamina;
+        }
+        if (stamina > 15)
+        {
+            canRun = true;
+        }
     }
 
     private void OnDrawGizmos()
