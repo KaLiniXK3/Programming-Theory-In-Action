@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    //Encapsulation
+    //Inheritance
+
     //references
     [Header("References")]
     [SerializeField] protected Rigidbody rb;
     [SerializeField] public GameObject player;
     [SerializeField] PatrolPath patrolPath;
+    [SerializeField] ParticleSystem dealDamageParticle;
 
     //Variables
     [Header("Attack Variables")]
@@ -71,7 +75,11 @@ public class Enemy : MonoBehaviour
         timeSinceLastSawPlayer += Time.fixedDeltaTime;
     }
 
+    //Abstractions
+    //Polymorphisms
+    //Encapsulations
     //General Methods
+
     protected void MoveToTarget(Transform target)
     {
         rb.MovePosition(transform.position + Target(target) * speed * Time.fixedDeltaTime);
@@ -124,6 +132,7 @@ public class Enemy : MonoBehaviour
     protected virtual void DealDamage()
     {
         PlayerHealth.health -= Random.Range(minDamage, maxDamage);
+        Instantiate(dealDamageParticle, transform.position, Quaternion.identity);
         canAttack = false;
         if (PlayerHealth.health < 0)
         {
@@ -174,6 +183,8 @@ public class Enemy : MonoBehaviour
     }
 
     //Target overloads
+    //Polymorphism
+
     protected Vector3 Target(GameObject target)
     {
         return Vector3.Normalize(target.transform.position - transform.position);

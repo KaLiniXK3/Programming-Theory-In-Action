@@ -46,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
         Gravity();
     }
 
+    //Abstractions
     void GroundChecker()
     {
         isGrounded = Physics.CheckSphere(groundCheck.transform.position, groundCheckRadius, groundMask);

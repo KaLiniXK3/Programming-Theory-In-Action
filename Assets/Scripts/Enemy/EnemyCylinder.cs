@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class EnemyCylinder : Enemy
 {
+    //Inheritance
+
     [Header("Enemy Special Variables")]
     [SerializeField] float rotateSpeed;
     [SerializeField] float speed2;
+
+    //Polymorphism
+    //Encapsulation
     protected override void MoveType()
     {
         transform.LookAt(currentTarget);

@@ -8,6 +8,7 @@ public class SphereBullet : MonoBehaviour
     [SerializeField] Rigidbody rb;
     [SerializeField] Renderer rend;
     [SerializeField] float emissionIntensity;
+    [SerializeField] ParticleSystem explosionParticle;
     private Transform _cam;
     public Transform cam
     {
@@ -36,6 +37,7 @@ public class SphereBullet : MonoBehaviour
         Destroy(gameObject, 2);
     }
 
+    //Abstracion
     void RandomEmissionColor()
     {
         rend = GetComponent<Renderer>();
@@ -48,8 +50,9 @@ public class SphereBullet : MonoBehaviour
         {
             damageAmount = Random.Range(30, 80);
             collision.gameObject.GetComponent<Enemy>().TakeDamage(damageAmount);
+            Instantiate(explosionParticle, transform.position, Quaternion.identity);
+            SoundManager.instance.PlaySound("DealDamage");
             Destroy(gameObject);
         }
     }
-
 }

@@ -25,6 +25,7 @@ public class ThrowSphereBullet : MonoBehaviour
         SetCooldown();
     }
 
+    //Abstraction
     void ThrowSphere()
     {
         GameObject bulletSphere = (GameObject)Instantiate(spheresPrefab, handPos.transform.position, Quaternion.identity);

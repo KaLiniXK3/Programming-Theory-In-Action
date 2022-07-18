@@ -130,5 +130,6 @@ MonoBehaviour:
   rb: {fileID: -5573459976082080458}
   rend: {fileID: 931125382468540008}
   emissionIntensity: 3
+  explosionParticle: {fileID: 2088871590894813759, guid: 28b6072990ad6fd4ba894bdf72adcee8, type: 3}
   forceMultiplier: 7
   damageAmount: 0

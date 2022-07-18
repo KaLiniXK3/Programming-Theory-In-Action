@@ -23,6 +23,8 @@ public class MouseLook : MonoBehaviour
             MouseController();
         }
     }
+
+    //Abstraction
     void MouseController()
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;

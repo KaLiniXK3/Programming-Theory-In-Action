@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyCube : Enemy
 {
+    //Inheritance
     //Variables
     [Header("Enemy Special Variables")]
     [SerializeField] float jumpHeight;
@@ -12,6 +13,8 @@ public class EnemyCube : Enemy
     [SerializeField] float rotateSpeed;
 
     bool canJump = true;
+    //Polymorphism
+    //Encapsulation
     protected override void MoveType()
     {
         Quaternion lookOnLook = Quaternion.LookRotation(Target(currentTarget));
