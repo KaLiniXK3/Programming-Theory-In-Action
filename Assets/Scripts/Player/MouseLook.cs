@@ -6,10 +6,9 @@ public class MouseLook : MonoBehaviour
 {
     //References
     [SerializeField] Transform player;
-    float mouseX;
-    float mouseY;
     //Variables
-    [SerializeField] float mouseSensitivity;
+    public static float mouseSensitivity;
+    public static bool isPauseScreenActive;
     float xRotation;
 
     private void Start()
@@ -19,7 +18,10 @@ public class MouseLook : MonoBehaviour
 
     private void LateUpdate()
     {
-        MouseController();
+        if (!isPauseScreenActive)
+        {
+            MouseController();
+        }
     }
     void MouseController()
     {

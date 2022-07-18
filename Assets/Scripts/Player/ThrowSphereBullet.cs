@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 public class ThrowSphereBullet : MonoBehaviour
 {
     //References
@@ -17,6 +17,8 @@ public class ThrowSphereBullet : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1") && canThrow)
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
             ThrowSphere();
             canThrow = false;
         }

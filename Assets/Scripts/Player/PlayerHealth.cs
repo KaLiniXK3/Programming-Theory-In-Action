@@ -26,7 +26,7 @@ public class PlayerHealth : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         health = 100;
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
     void DeathEvents()
     {
