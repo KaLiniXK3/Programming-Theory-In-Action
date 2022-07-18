@@ -18,10 +18,21 @@ public class PlayerHealth : MonoBehaviour
     {
         if (health <= 0)
         {
-            Debug.Log("Dead");
+            DeathEvents();
+            StartCoroutine(RestartLevel());
         }
     }
-
+    IEnumerator RestartLevel()
+    {
+        yield return new WaitForSeconds(1);
+        health = 100;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+    void DeathEvents()
+    {
+        CharacterController characterController = GetComponent<CharacterController>();
+        characterController.Move(Vector3.up);
+    }
     public static void UpdateHealthText()
     {
         healthText.text = health + " HP";

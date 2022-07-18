@@ -27,8 +27,9 @@ public class EnemyCube : Enemy
         rb.velocity += velocityCube;
         canJump = false;
     }
-    private void OnCollisionEnter(Collision collision)
+    protected override void OnCollisionEnter(Collision collision)
     {
+        base.OnCollisionEnter(collision);
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             canJump = true;

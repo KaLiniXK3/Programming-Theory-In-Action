@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: EnemyRectangle
+  m_Name: EnemyCube
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ValidKeywords:
   - _EMISSION
@@ -76,6 +76,6 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.2262758, g: 0.41509432, b: 0.17817728, a: 1}
-    - _EmissionColor: {r: 0.36739242, g: 1.2418898, b: 0.23285435, a: 1}
+    - _Color: {r: 0.54901963, g: 0.27450982, b: 0.2627451, a: 1}
+    - _EmissionColor: {r: 0.1715905, g: 0.01643472, b: 0.013759618, a: 1}
   m_BuildTextureStacks: []

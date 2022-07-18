@@ -128,4 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: -5573459976082080458}
+  rend: {fileID: 931125382468540008}
+  emissionIntensity: 3
   forceMultiplier: 7
+  damageAmount: 0

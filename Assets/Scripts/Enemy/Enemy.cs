@@ -18,15 +18,20 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected int maxDamage;
     [SerializeField] protected float attackRange;
     [SerializeField] protected float cooldown;
+    [SerializeField] protected float forceMultiplier;
     bool canAttack;
+    bool canDealDamage = true;
 
     [Header("Movement Variables")]
     //Movement
     [SerializeField] protected float speed = 2;
+    [SerializeField] protected float walkSpeed;
+    [SerializeField] protected float followSpeed;
     [SerializeField] protected float observationSphereRadius;
     [SerializeField] float suspiciousTime;
     float timeSinceLastSawPlayer;
     bool isTriggered;
+    Vector3 startPosition;
     protected Transform currentTarget;
 
     [Header("Patrol Variables")]
@@ -37,6 +42,10 @@ public class Enemy : MonoBehaviour
     float timeSinceArrivedWayPoint;
     float time;
 
+    private void Start()
+    {
+        startPosition = transform.position;
+    }
     private void Update()
     {
         isTriggered = ObservationZone();
@@ -46,11 +55,13 @@ public class Enemy : MonoBehaviour
         if (isTriggered)
         {
             MoveToTarget(player.transform);
+            speed = followSpeed;
             Attack();
             timeSinceLastSawPlayer = 0;
         }
         else if (timeSinceLastSawPlayer < suspiciousTime)
         {
+            speed = walkSpeed;
             //Wait
         }
         else
@@ -96,9 +107,8 @@ public class Enemy : MonoBehaviour
     {
         if (DistanceBetweenPlayer() < attackRange && canAttack)
         {
-            DealDamage();
+            rb.AddForce(Target(player) * forceMultiplier);
             canAttack = false;
-            Debug.Log(PlayerHealth.health);
         }
         if (!canAttack)
         {
@@ -106,6 +116,7 @@ public class Enemy : MonoBehaviour
             if (time > cooldown)
             {
                 canAttack = true;
+                canDealDamage = true;
                 time = 0;
             }
         }
@@ -113,11 +124,22 @@ public class Enemy : MonoBehaviour
     protected virtual void DealDamage()
     {
         PlayerHealth.health -= Random.Range(minDamage, maxDamage);
+        canAttack = false;
         if (PlayerHealth.health < 0)
         {
             PlayerHealth.health = 0;
         }
         PlayerHealth.UpdateHealthText();
+    }
+    public virtual void TakeDamage(int damageAmount)
+    {
+        health -= damageAmount;
+        if (health < 0)
+        {
+            GetComponent<Collider>().enabled = false;
+            rb.AddForce(Vector3.up * 1500);
+            Destroy(gameObject, 3);
+        }
     }
 
     //Patrol Methods
@@ -162,5 +184,22 @@ public class Enemy : MonoBehaviour
 
         return Vector3.Normalize(target.position - transform.position);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        transform.position = startPosition;
+    }
+    protected virtual void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if (canDealDamage)
+            {
+                DealDamage();
+                canDealDamage = false;
+            }
+        }
+    }
 }
+
 

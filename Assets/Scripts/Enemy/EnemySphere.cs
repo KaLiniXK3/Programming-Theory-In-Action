@@ -15,6 +15,10 @@ public class EnemySphere : Enemy
         transform.Rotate(Vector3.up, 90);
         transform.Rotate(Vector3.forward, rotateSpeed);
         rotateSpeed += Time.fixedDeltaTime * speed2;
+        if (rotateSpeed < -1080)
+        {
+            rotateSpeed = 0;
+        }
 
     }
 }

@@ -10,6 +10,5 @@ public class EnemyRectangle : Enemy
     protected override void MoveType()
     {
         transform.Rotate(Vector3.up, rotateSpeed * Time.fixedDeltaTime);
-
     }
 }

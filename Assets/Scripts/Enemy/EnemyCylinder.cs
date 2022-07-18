@@ -12,6 +12,10 @@ public class EnemyCylinder : Enemy
         transform.LookAt(currentTarget);
         transform.Rotate(Vector3.forward, 90);
         transform.Rotate(Vector3.up, rotateSpeed);
-        rotateSpeed += Time.fixedDeltaTime * speed2;
+        rotateSpeed -= Time.fixedDeltaTime * speed2;
+        if (rotateSpeed < -1080)
+        {
+            rotateSpeed = 0;
+        }
     }
 }

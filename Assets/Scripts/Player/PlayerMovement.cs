@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 public class PlayerMovement : MonoBehaviour
 {
     //References
@@ -66,8 +66,6 @@ public class PlayerMovement : MonoBehaviour
     }
     void Run()
     {
-        Debug.Log("Speed: " + speed);
-
         if (Input.GetKey(KeyCode.LeftShift) && canRun)
         {
             speed = runSpeed;
@@ -129,6 +127,11 @@ public class PlayerMovement : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(groundCheck.transform.position, groundCheckRadius);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        SceneManager.LoadScene(0);
     }
 }
 
